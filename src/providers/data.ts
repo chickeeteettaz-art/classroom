@@ -1,23 +1,23 @@
-import {DataProvider, GetListParams, GetListResponse,BaseRecord} from "@refinedev/core";
-import { MOCK_SUBJECTS } from "../constants/mock-data";
+import {createDataProvider,CreateDataProviderOptions} from "@refinedev/rest";
+import {BACKEND_BASE_URL} from "@/constants";
+import {ListResponse} from "@/types";
 
+const options:CreateDataProviderOptions = {
+    getList:{
+        getEndpoint:({resource}) => resource,
 
-export const dataProvider:DataProvider ={
-    getList:async <TData extends BaseRecord = BaseRecord>({resource}:
-    GetListParams):Promise<GetListResponse<TData>> => {
-      if(resource !== 'subjects') return { data:[] as TData[], total:0};
+        mapResponse:async (response:Response) => {
+        const payload: ListResponse = await response.json();
+        return payload.data ?? [];
+        },
 
-      return {
-        data : MOCK_SUBJECTS as unknown as TData[],
-        total: MOCK_SUBJECTS.length
-      }
-
-    },
-
-    getOne:async () => {throw new Error('This function is not yet available in mock')},
-    create:async () => {throw new Error('This function is not yet available in mock')},
-    update:async () => {throw new Error('This function is not yet available in mock')},
-    deleteOne:async () => {throw new Error('This function is not yet available in mock')},
-
-    getApiUrl: () => '',
+        getTotalCount: async (response:Response) => {
+            const payload:ListResponse = await response.json();
+            return payload.pagination?.total ?? payload.data?.length ?? 0;
+        }
+    }
 }
+
+const {dataProvider} = createDataProvider(BACKEND_BASE_URL, options);
+
+export {dataProvider};

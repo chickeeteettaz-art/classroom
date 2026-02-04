@@ -40,7 +40,7 @@ const SubjectList = () => {
                     cell:({getValue}) => <span className={'text-foreground'}>{getValue<String>()}</span>,
                 },
                 {id:'department',
-                    accessorKey:'department',
+                    accessorKey:'department.name',
                     size:150,
                     header: () => <p className={'column-title'}>Department</p>,
                     cell:({getValue}) => <Badge variant={'secondary'}>{getValue<String>()}</Badge>,
