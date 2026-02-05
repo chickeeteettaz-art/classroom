@@ -1,6 +1,7 @@
 
 
 import { GraduationCap, School } from "lucide-react";
+import { z } from "zod";
 
 export const USER_ROLES = {
     STUDENT: "student",
@@ -57,24 +58,26 @@ export const ALLOWED_TYPES = [
     "image/webp",
 ];
 
-const getEnvVar = (key: string): string => {
-    const value = import.meta.env[key];
-    if (!value) {
-        throw new Error(`Missing environment variable: ${key}`);
-    }
-    return value;
-};
+const envSchema = z.object({
+    VITE_CLOUDINARY_CLOUD_NAME: z.string().min(1, "Cloudinary cloud name is required"),
+    VITE_CLOUDINARY_UPLOAD_PRESET: z.string().min(1, "Cloudinary upload preset is required"),
+    VITE_BACKEND_BASE_URL: z.string().url("Invalid backend base URL"),
+    VITE_API_URL: z.string().url("Invalid API URL").optional(),
+});
 
-//export const CLOUDINARY_UPLOAD_URL = getEnvVar("VITE_CLOUDINARY_UPLOAD_URL");
-//export const CLOUDINARY_CLOUD_NAME = getEnvVar("VITE_CLOUDINARY_CLOUD_NAME");
-export const BACKEND_BASE_URL = getEnvVar("VITE_BACKEND_BASE_URL");
+const parsedEnv = envSchema.safeParse(import.meta.env);
 
-//export const BASE_URL =  import.meta.env.VITE_API_URL;
-//export const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY
-//export const REFRESH_TOKEN_KEY = import.meta.env.VITE_REFRESH_TOKEN_KEY
+if (!parsedEnv.success) {
+    console.error("❌ Invalid environment variables:", parsedEnv.error.flatten().fieldErrors);
+    throw new Error("Invalid environment variables");
+}
 
-//export const REFRESH_TOKEN_URL = `${BASE_URL}/refresh-token`;
+export const {
+    VITE_CLOUDINARY_CLOUD_NAME: CLOUDINARY_CLOUD_NAME,
+    VITE_CLOUDINARY_UPLOAD_PRESET: CLOUDINARY_UPLOAD_PRESET,
+    VITE_BACKEND_BASE_URL: BACKEND_BASE_URL,
+} = parsedEnv.data;
 
-//export const CLOUDINARY_UPLOAD_PRESET = getEnvVar("VITE_CLOUDINARY_UPLOAD_PRESET");
+export const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
 
