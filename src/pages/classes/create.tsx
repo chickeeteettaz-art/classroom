@@ -91,7 +91,6 @@ const ClassesCreate = () => {
     const subjects = subjectsQuery.data?.data || [];
     const subjectsLoading = subjectsQuery.isLoading;
 
-    // @ts-ignore
     return (
         <CreateView className="class-view">
             <Breadcrumb />
@@ -127,6 +126,7 @@ const ClassesCreate = () => {
                                             </FormLabel>
                                             <FormControl>
                                                 <UploadWidget
+                                                    //ts-ignore
                                                     value={
                                                         field.value
                                                             ? {
