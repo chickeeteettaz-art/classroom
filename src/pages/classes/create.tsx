@@ -91,6 +91,7 @@ const ClassesCreate = () => {
     const subjects = subjectsQuery.data?.data || [];
     const subjectsLoading = subjectsQuery.isLoading;
 
+    // @ts-ignore
     return (
         <CreateView className="class-view">
             <Breadcrumb />
@@ -134,7 +135,7 @@ const ClassesCreate = () => {
                                                             }
                                                             : null
                                                     }
-                                                    onChange={(file) => {
+                                                    onChange={(file: { url: any; publicId: string; }) => {
                                                         if (file) {
                                                             field.onChange(file.url);
                                                             form.setValue("bannerCldPubId", file.publicId, {
