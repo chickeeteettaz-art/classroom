@@ -62,6 +62,8 @@ const ClassesCreate = () => {
         }
     };
 
+
+
     // Fetch subjects list
     const { query: subjectsQuery } = useList<Subject>({
         resource: "subjects",
